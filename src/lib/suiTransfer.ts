@@ -18,7 +18,7 @@ export async function createSuiTransfer(
   provider: SuietProvider,
   to: string,
   amountSui: number,
-  rpcUrl = 'https://fullnode.mainnet.sui.io'
+  rpcUrl = 'https://fullnode.testnet.sui.io:443'
 ): Promise<string> {
   if (!provider.account?.address) throw new Error('Wallet not connected');
   if (!to || amountSui <= 0) throw new Error('Recipient and amount required');
@@ -26,8 +26,8 @@ export async function createSuiTransfer(
   const client = new SuiClient({ url: rpcUrl });
   const tx = new Transaction();
 
-  // Convert to mist (1 SUI = 1e9 mist)
-  const mist = Math.round(amountSui * 1_000_000_000);
+  // Convert to mist 
+  const mist = Math.round(amountSui * 1_000_000);
 
   tx.transferObjects(
     [tx.splitCoins(tx.gas, [tx.pure.u64(mist)])],
