@@ -8,13 +8,13 @@
     "start": "next start",
     "lint": "eslint"
   },
-   "dependencies": {
+  "dependencies": {
     "next": "14.2.5",
     "react": "19.1.1",
     "react-dom": "18.3.1",
-    "@reown/appkit": "^1.1.0",
-    "@reown/appkit-adapter-solana": "1.0.3",
-    "@solana/web3.js": "1.81.0",
+    "@reown/appkit": "1.7.20",
+    "@reown/appkit-adapter-solana": "1.7.20",
+    "@solana/web3.js": "1.98.0",
     "@suiet/wallet-kit": "^0.5.1",
     "@mysten/sui": "^1.37.3",
     "clsx": "^2.1.1",
