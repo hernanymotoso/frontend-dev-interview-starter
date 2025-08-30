@@ -4,7 +4,7 @@ import {
   SystemProgram,
   Transaction,
   LAMPORTS_PER_SOL,
-} from '@solana/web3.js';
+} from "@solana/web3.js";
 
 // Minimal shape of Reown’s injected Solana provider
 export interface ReownSolanaProvider {
@@ -16,12 +16,9 @@ export async function createSolanaTransfer(
   provider: ReownSolanaProvider,
   to: string,
   amountSol: number,
-  rpcUrl = 'https://api.mainnet-beta.solana.com'
+  rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT!
 ): Promise<string> {
-  if (!provider.publicKey) throw new Error('Wallet not connected');
-  if (!to || amountSol <= 0) throw new Error('Recipient and amount required');
-
-  const connection = new Connection(rpcUrl, 'confirmed');
+  const connection = new Connection(rpcUrl, "confirmed");
   const lamports = Math.round(amountSol * LAMPORTS_PER_SOL);
 
   // Create transfer instruction
@@ -40,7 +37,7 @@ export async function createSolanaTransfer(
   const { signature } = await provider.signAndSendTransaction(tx);
 
   // Optionally confirm
-  await connection.confirmTransaction(signature, 'confirmed');
+  await connection.confirmTransaction(signature, "confirmed");
 
   return signature;
 }

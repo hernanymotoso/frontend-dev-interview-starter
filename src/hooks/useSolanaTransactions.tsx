@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 
+// TODO: improve to return more details
 export const useSolanaTransactions = (publicKey?: string) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
