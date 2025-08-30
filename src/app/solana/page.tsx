@@ -1,38 +1,48 @@
-'use client';
-import { useState } from 'react';
-import { useSolanaTransactions } from '@/hooks/useSolanaTransactions'; 
-import { TransactionTable } from '@/components/TransactionTable';
-import { TransferCard } from '@/components/TransferCard';
-import { createSolanaTransfer } from '@/lib/solanaTransfer';
-import { useReownSolanaProvider } from '@/lib/reown';
+"use client";
+import { useState } from "react";
+import { useSolanaTransactions } from "@/hooks/useSolanaTransactions";
+import { TransactionTable } from "@/components/TransactionTable";
+import { TransferCard } from "@/components/TransferCard";
+import { createSolanaTransfer } from "@/lib/solanaTransfer";
+import { useReownSolanaProvider } from "@/lib/reown";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
   const pubkey = provider?.publicKey?.toBase58() ?? null;
 
-  const { data, loading, error, refetch } = useSolanaTransactions(pubkey ?? undefined);
+  console.log({ pubkey });
+
+  const { data, loading, error, refetch } = useSolanaTransactions(
+    pubkey ?? undefined
+  );
+
   const [busy, setBusy] = useState(false);
+
+  console.log({ data, loading, error, refetch });
 
   return (
     <main className="p-8">
       <h1 className="text-2xl font-semibold mb-6">Solana</h1>
       <div className="mb-4 text-sm text-[var(--muted)]">
-        Connected: {pubkey ?? 'Disconnected'}
+        Connected: {pubkey ?? "Disconnected"}
       </div>
+
+      <ConnectWalletButton />
 
       <TransferCard
         title="Solana Transfer"
         from={pubkey}
         unitLabel="SOL"
         onSubmit={async (to, amountSol) => {
-          if (!provider) return alert('Connect wallet first');
+          if (!provider) return alert("Connect wallet first");
           setBusy(true);
           try {
             const sig = await createSolanaTransfer(provider, to, amountSol);
-            console.log('Sent tx:', sig);
+            console.log("Sent tx:", sig);
             await refetch();
           } catch (e: any) {
-            alert(e.message || 'Failed');
+            alert(e.message || "Failed");
           } finally {
             setBusy(false);
           }
@@ -50,7 +60,9 @@ export default function SolanaPage() {
         )}
       </div>
 
-      {busy && <div className="mt-2 text-xs text-[var(--muted)]">Submitting…</div>}
+      {busy && (
+        <div className="mt-2 text-xs text-[var(--muted)]">Submitting…</div>
+      )}
     </main>
   );
 }
