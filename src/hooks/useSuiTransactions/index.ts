@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useCallback, useEffect, useState } from "react";
-
-// Documentation: https://docs.sui.io/sui-api-ref#suix_querytransactionblocks
+import { parseTransaction } from "./helpers";
+import { TransactionData } from "../useSolanaTransactions/types";
 
 export const useSuiTransactions = (address?: string) => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<TransactionData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any | null>(null);
 
@@ -30,7 +28,13 @@ export const useSuiTransactions = (address?: string) => {
               filter: {
                 FromAddress: address,
               },
+              options: {
+                showBalanceChanges: true,
+              },
             },
+            null,
+            10,
+            true,
           ],
         }),
       });
@@ -49,17 +53,14 @@ export const useSuiTransactions = (address?: string) => {
         throw new Error(data.error.message);
       }
 
-      const mappedTransactions = data.result.data.map((tx: any) => ({
-        digest: tx.digest,
-        blockTime: tx.timestampMs,
-        status: tx.effects?.status?.status || "unknown",
-        gasUsed: parseInt(tx.effects?.gasUsed?.computationCost || "0"),
-        sender: tx.transaction?.data?.sender || address,
-      }));
+      const transactions = data.result?.data || [];
+      const parsedTransactions = transactions.map((tx: any) =>
+        parseTransaction(tx, address)
+      );
 
-      setData(mappedTransactions);
+      setData(parsedTransactions);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
+      setError(err instanceof Error ? err.message : "Internal server error");
       setData([]);
     } finally {
       setLoading(false);
