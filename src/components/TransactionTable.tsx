@@ -24,7 +24,7 @@ export function TransactionTable({ rows }: { rows: any[] | null }) {
               <td className="py-2 pr-3">{r.amount}</td>
               <td className="py-2 pr-3">{r.unit}</td>
               <td className="py-2 pr-3">
-                {new Date(r.blockTime * 1000).toLocaleString()}
+                {new Date(r.blockTime).toLocaleString()}
               </td>
             </tr>
           ))}
