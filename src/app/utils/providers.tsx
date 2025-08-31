@@ -3,6 +3,8 @@
 import { createAppKit } from "@reown/appkit/react";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
 import { solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
+import { WalletProvider } from "@suiet/wallet-kit";
+import "@suiet/wallet-kit/style.css";
 
 const solanaWeb3JsAdapter = new SolanaAdapter();
 
@@ -23,5 +25,5 @@ createAppKit({
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return <WalletProvider>{children}</WalletProvider>;
 }
