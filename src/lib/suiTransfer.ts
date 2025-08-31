@@ -1,9 +1,10 @@
-import { Transaction, SuiClient } from '@mysten/sui';
+import { SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 
 export interface SuietProvider {
   account: {
     address: string;
-    publicKey: Uint8Array; 
+    publicKey: Uint8Array;
   };
   signAndExecuteTransaction(input: {
     transaction: Transaction;
@@ -18,15 +19,15 @@ export async function createSuiTransfer(
   provider: SuietProvider,
   to: string,
   amountSui: number,
-  rpcUrl = 'https://fullnode.testnet.sui.io:443'
+  rpcUrl = process.env.NEXT_PUBLIC_SUI_RPC_ENDPOINT!
 ): Promise<string> {
-  if (!provider.account?.address) throw new Error('Wallet not connected');
-  if (!to || amountSui <= 0) throw new Error('Recipient and amount required');
+  if (!provider.account?.address) throw new Error("Wallet not connected");
+  if (!to || amountSui <= 0) throw new Error("Recipient and amount required");
 
   const client = new SuiClient({ url: rpcUrl });
   const tx = new Transaction();
 
-  // Convert to mist 
+  // Convert to mist
   const mist = Math.round(amountSui * 1_000_000);
 
   tx.transferObjects(
