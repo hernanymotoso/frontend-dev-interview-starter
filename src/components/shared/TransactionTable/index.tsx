@@ -7,7 +7,7 @@ import { buildAddressString } from "@/helpers/string";
 export function TransactionTable({ transactions }: TransactionTableProps) {
   if (!transactions || transactions?.length === 0) {
     return (
-      <div className="bg-[#1d1e2c] border border-gray-800 rounded-2xl p-8">
+      <div className="bg-[#1d1e2c]/40 backdrop-blur-md border border-gray-800 rounded-2xl p-8">
         <div className="text-center">
           <div className="mb-4">
             <div className="w-16 h-16 mx-auto bg-gray-800 rounded-full flex items-center justify-center mb-4">
@@ -29,7 +29,7 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
   }
 
   return (
-    <div className="bg-[#1d1e2c] border border-gray-800 rounded-2xl p-6">
+    <div className="bg-[#1d1e2c]/40 backdrop-blur-md  border border-gray-800 rounded-2xl p-6">
       <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full text-sm min-w-[600px]">
           <thead>
