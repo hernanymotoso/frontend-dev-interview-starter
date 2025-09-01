@@ -5,7 +5,6 @@ import { TransactionTable } from "@/components/shared/TransactionTable";
 import { TransferCard } from "@/components/shared/TransferCard";
 import { createSolanaTransfer } from "@/lib/solanaTransfer";
 import { useReownSolanaProvider } from "@/lib/reown";
-import ConnectWalletButton from "@/components/ConnectWalletButton";
 import { Send } from "lucide-react";
 
 export default function SolanaPage() {
@@ -26,8 +25,6 @@ export default function SolanaPage() {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-semibold mb-6">Solana</h1>
-
-      <ConnectWalletButton />
 
       {showTransferModal && (
         <TransferCard
