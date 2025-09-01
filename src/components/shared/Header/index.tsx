@@ -42,17 +42,17 @@ export function Header() {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="/solana"
-            className="relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105"
-          >
-            <span className="relative z-10">Solana</span>
-          </Link>
-
-          <Link
             href="/sui"
             className="relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105"
           >
             <span className="relative z-10">Sui</span>
+          </Link>
+
+          <Link
+            href="/solana"
+            className="relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105"
+          >
+            <span className="relative z-10">Solana</span>
           </Link>
         </nav>
 
