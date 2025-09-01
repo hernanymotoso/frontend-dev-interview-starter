@@ -2,14 +2,16 @@
 import { useState } from "react";
 import { useSolanaTransactions } from "@/hooks/useSolanaTransactions";
 import { TransactionTable } from "@/components/TransactionTable";
-import { TransferCard } from "@/components/TransferCard";
+import { TransferCard } from "@/components/shared/TransferCard";
 import { createSolanaTransfer } from "@/lib/solanaTransfer";
 import { useReownSolanaProvider } from "@/lib/reown";
 import ConnectWalletButton from "@/components/ConnectWalletButton";
+import { Send } from "lucide-react";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
   const pubkey = provider?.publicKey?.toBase58() ?? null;
+  const [showTransferModal, setShowTransferModal] = useState(false);
 
   console.log({ pubkey });
 
@@ -30,24 +32,38 @@ export default function SolanaPage() {
 
       <ConnectWalletButton />
 
-      <TransferCard
-        title="Solana Transfer"
-        from={pubkey}
-        unitLabel="SOL"
-        onSubmit={async (to, amountSol) => {
-          if (!provider) return alert("Connect wallet first");
-          setBusy(true);
-          try {
-            const sig = await createSolanaTransfer(provider, to, amountSol);
-            console.log("Sent tx:", sig);
-            await refetch();
-          } catch (e: any) {
-            alert(e.message || "Failed");
-          } finally {
-            setBusy(false);
-          }
-        }}
-      />
+      <div className="mb-6">
+        <button
+          onClick={() => setShowTransferModal(true)}
+          className="flex items-center gap-2 bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
+        >
+          <Send className="w-4 h-4" />
+          New Transfer
+        </button>
+      </div>
+
+      {showTransferModal && (
+        <TransferCard
+          title="Solana Transfer"
+          from={pubkey}
+          unitLabel="SOL"
+          onClose={() => setShowTransferModal(false)}
+          onSubmit={async (to, amountSol) => {
+            if (!provider) return alert("Connect wallet first");
+            setBusy(true);
+            try {
+              const sig = await createSolanaTransfer(provider, to, amountSol);
+              console.log("Sent tx:", sig);
+              await refetch();
+              setShowTransferModal(false);
+            } catch (e: any) {
+              alert(e.message || "Failed");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        />
+      )}
 
       <div className="mt-8">
         <h2 className="text-xl mb-2">Recent Transactions</h2>
