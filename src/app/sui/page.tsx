@@ -19,7 +19,7 @@ export default function SuiPage() {
   const [busy, setBusy] = useState(false);
 
   return (
-    <main className="p-8">
+    <main className="container mx-auto p-8">
       <h1 className="text-2xl font-semibold mb-6">SUI</h1>
 
       {showTransferModal && (

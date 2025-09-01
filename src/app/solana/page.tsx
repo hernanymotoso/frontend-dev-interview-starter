@@ -23,7 +23,7 @@ export default function SolanaPage() {
   console.log({ data, loading, error, refetch });
 
   return (
-    <main className="p-8">
+    <main className="container mx-auto p-8">
       <h1 className="text-2xl font-semibold mb-6">Solana</h1>
 
       {showTransferModal && (
