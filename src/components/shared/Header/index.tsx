@@ -7,6 +7,7 @@ import { MenuButtonProps, MenuDropDownProps } from "./types";
 import { useSuietProvider } from "@/lib/suiet";
 import { useReownSolanaProvider } from "@/lib/reown";
 import { buildAddressString } from "@/helpers/string";
+import { SuiWallet } from "./components/SuiWallet";
 
 export function Header() {
   const pathname = usePathname();
@@ -18,10 +19,8 @@ export function Header() {
   const isSolana = pathname === "/solana";
   const showWalletSection = isSui || isSolana;
 
-  const suiProvider = useSuietProvider();
   const solanaProvider = useReownSolanaProvider();
 
-  const suiAddress = suiProvider?.account.address ?? null;
   const solanaAddress = solanaProvider?.publicKey?.toBase58() ?? null;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -71,14 +70,10 @@ export function Header() {
           </Link>
         </nav>
 
-        {showWalletSection && (
-          <div className="hidden md:flex items-center gap-4">
-            {isSui && suiAddress && (
-              <span className="text-sm text-gray-400" title={suiAddress}>
-                {buildAddressString(suiAddress)}
-              </span>
-            )}
+        {showWalletSection && isSui && <SuiWallet />}
 
+        {showWalletSection && isSolana && (
+          <div className="hidden md:flex items-center gap-4">
             {isSolana && solanaAddress && (
               <span className="text-sm text-gray-400" title={solanaAddress}>
                 {buildAddressString(solanaAddress)}

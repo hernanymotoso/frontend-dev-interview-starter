@@ -7,7 +7,6 @@ import { TransferCard } from "@/components/shared/TransferCard";
 import { createSuiTransfer } from "@/lib/suiTransfer";
 import { useSuietProvider } from "@/lib/suiet";
 import { Send } from "lucide-react";
-import { ConnectButton } from "@suiet/wallet-kit";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
@@ -22,8 +21,6 @@ export default function SuiPage() {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-semibold mb-6">SUI</h1>
-
-      <ConnectButton />
 
       {showTransferModal && (
         <TransferCard
