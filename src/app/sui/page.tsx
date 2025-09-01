@@ -22,9 +22,6 @@ export default function SuiPage() {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-semibold mb-6">SUI</h1>
-      <div className="mb-4 text-sm text-[var(--muted)]">
-        Connected: {address ?? "Disconnected"}
-      </div>
 
       <ConnectButton />
 
