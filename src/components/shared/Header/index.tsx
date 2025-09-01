@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useState, useEffect, useRef, forwardRef } from "react";
 import { usePathname } from "next/navigation";
 import { MenuButtonProps, MenuDropDownProps } from "./types";
+import { useSuietProvider } from "@/lib/suiet";
+import { useReownSolanaProvider } from "@/lib/reown";
+import { buildAddressString } from "@/helpers/string";
 
 export function Header() {
   const pathname = usePathname();
@@ -11,7 +14,15 @@ export function Header() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const showWalletSection = pathname === "/sui" || pathname === "/solana";
+  const isSui = pathname === "/sui";
+  const isSolana = pathname === "/solana";
+  const showWalletSection = isSui || isSolana;
+
+  const suiProvider = useSuietProvider();
+  const solanaProvider = useReownSolanaProvider();
+
+  const suiAddress = suiProvider?.account.address ?? null;
+  const solanaPubkey = solanaProvider?.publicKey?.toBase58() ?? null;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -62,7 +73,17 @@ export function Header() {
 
         {showWalletSection && (
           <div className="hidden md:flex items-center gap-4">
-            <span className="text-sm text-gray-400">connected wallet</span>
+            {isSui && suiAddress && (
+              <span className="text-sm text-gray-400" title={suiAddress}>
+                {buildAddressString(suiAddress)}
+              </span>
+            )}
+
+            {isSolana && solanaPubkey && (
+              <span className="text-sm text-gray-400" title={solanaPubkey}>
+                {buildAddressString(solanaPubkey)}
+              </span>
+            )}
 
             <button className="rounded-lg bg-[#1d1e2c] px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-700">
               Disconect
