@@ -4,10 +4,8 @@ import Link from "next/link";
 import { useState, useEffect, useRef, forwardRef } from "react";
 import { usePathname } from "next/navigation";
 import { MenuButtonProps, MenuDropDownProps } from "./types";
-import { useSuietProvider } from "@/lib/suiet";
-import { useReownSolanaProvider } from "@/lib/reown";
-import { buildAddressString } from "@/helpers/string";
 import { SuiWallet } from "./components/SuiWallet";
+import { SolanaWallet } from "./components/SolanaWallet";
 
 export function Header() {
   const pathname = usePathname();
@@ -18,10 +16,6 @@ export function Header() {
   const isSui = pathname === "/sui";
   const isSolana = pathname === "/solana";
   const showWalletSection = isSui || isSolana;
-
-  const solanaProvider = useReownSolanaProvider();
-
-  const solanaAddress = solanaProvider?.publicKey?.toBase58() ?? null;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -72,19 +66,7 @@ export function Header() {
 
         {showWalletSection && isSui && <SuiWallet />}
 
-        {showWalletSection && isSolana && (
-          <div className="hidden md:flex items-center gap-4">
-            {isSolana && solanaAddress && (
-              <span className="text-sm text-gray-400" title={solanaAddress}>
-                {buildAddressString(solanaAddress)}
-              </span>
-            )}
-
-            <button className="rounded-lg bg-[#1d1e2c] px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-700">
-              Disconect
-            </button>
-          </div>
-        )}
+        {showWalletSection && isSolana && <SolanaWallet isHidden />}
 
         <MenuButton isOpen={isMenuOpen} toggle={toggleMenu} ref={buttonRef} />
       </div>
@@ -93,6 +75,8 @@ export function Header() {
         isOpen={isMenuOpen}
         toggle={toggleMenu}
         showWalletSection={showWalletSection}
+        isSui={isSui}
+        isSolana={isSolana}
         ref={menuRef}
       />
     </header>
@@ -135,7 +119,8 @@ const MenuButton = forwardRef<HTMLButtonElement, MenuButtonProps>(
 MenuButton.displayName = "MenuButton";
 
 const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
-  ({ isOpen, toggle, showWalletSection }, ref) => {
+  ({ isOpen, toggle, isSui, isSolana, showWalletSection }, ref) => {
+    console.log({ isSui, isSolana, showWalletSection });
     return (
       <div
         ref={ref}
@@ -164,17 +149,11 @@ const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
             </Link>
           </nav>
 
-          {showWalletSection && (
-            <div className="p-4 border-t border-gray-700 bg-[#1d1e2c]">
-              <div className="mb-4">
-                <span className="text-sm text-gray-400">connected wallet</span>
-              </div>
+          <div className="w-full p-4 border-t border-gray-700 bg-[#1d1e2c] flex flex-col items-end">
+            {showWalletSection && isSui && <SuiWallet />}
 
-              <button className="w-full rounded-lg bg-gray-800 px-4 py-3 text-sm font-medium transition-colors hover:bg-gray-700">
-                Disconect
-              </button>
-            </div>
-          )}
+            {showWalletSection && isSolana && <SolanaWallet />}
+          </div>
         </div>
       </div>
     );

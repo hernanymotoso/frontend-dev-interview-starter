@@ -10,5 +10,7 @@ export type MenuDropDownProps = {
   isOpen: boolean;
   toggle: () => void;
   showWalletSection: boolean;
+  isSui?: boolean;
+  isSolana?: boolean;
   ref?: RefObject<HTMLDivElement | null>;
 };

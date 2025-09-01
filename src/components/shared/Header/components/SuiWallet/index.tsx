@@ -1,8 +1,10 @@
 import { buildAddressString } from "@/helpers/string";
 import { ConnectModal, useWallet } from "@suiet/wallet-kit";
 import { useState } from "react";
+import { ButtonProps, SuiWalletProps } from "./types";
+import clsx from "clsx";
 
-export function SuiWallet() {
+export function SuiWallet({ isHidden }: SuiWalletProps) {
   const { connected, address, disconnect } = useWallet();
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -13,7 +15,7 @@ export function SuiWallet() {
 
   if (connected) {
     return (
-      <div className="hidden md:flex items-center gap-4">
+      <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
         {address && (
           <span className="text-sm text-gray-400" title={address}>
             {buildAddressString(address)}
@@ -25,7 +27,7 @@ export function SuiWallet() {
     );
   } else {
     return (
-      <div className="hidden md:flex items-center gap-4">
+      <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
         <ConnectModal
           open={showModal}
           onOpenChange={(open) => setShowModal(open)}
@@ -38,11 +40,6 @@ export function SuiWallet() {
 }
 
 // Maybe move this to own component
-type ButtonProps = {
-  label: string;
-  onClick?: () => void;
-};
-
 function Button({ label, onClick }: ButtonProps) {
   return (
     <button
