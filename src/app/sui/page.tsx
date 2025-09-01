@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 import { useSuiTransactions } from "@/hooks/useSuiTransactions";
-import { TransactionTable } from "@/components/TransactionTable";
+import { TransactionTable } from "@/components/shared/TransactionTable";
 import { TransferCard } from "@/components/shared/TransferCard";
 import { createSuiTransfer } from "@/lib/suiTransfer";
 import { useSuietProvider } from "@/lib/suiet";
@@ -70,7 +70,7 @@ export default function SuiPage() {
         ) : error ? (
           <div>Error: {String(error.message || error)}</div>
         ) : (
-          <TransactionTable rows={data} />
+          <TransactionTable transactions={data as any} />
         )}
       </div>
 

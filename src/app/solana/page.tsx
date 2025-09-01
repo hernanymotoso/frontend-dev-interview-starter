@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSolanaTransactions } from "@/hooks/useSolanaTransactions";
-import { TransactionTable } from "@/components/TransactionTable";
+import { TransactionTable } from "@/components/shared/TransactionTable";
 import { TransferCard } from "@/components/shared/TransferCard";
 import { createSolanaTransfer } from "@/lib/solanaTransfer";
 import { useReownSolanaProvider } from "@/lib/reown";
@@ -72,7 +72,7 @@ export default function SolanaPage() {
         ) : error ? (
           <div>Error: {String(error.message || error)}</div>
         ) : (
-          <TransactionTable rows={data} />
+          <TransactionTable transactions={data as any} />
         )}
       </div>
 
