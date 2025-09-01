@@ -22,7 +22,7 @@ export function Header() {
   const solanaProvider = useReownSolanaProvider();
 
   const suiAddress = suiProvider?.account.address ?? null;
-  const solanaPubkey = solanaProvider?.publicKey?.toBase58() ?? null;
+  const solanaAddress = solanaProvider?.publicKey?.toBase58() ?? null;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -79,9 +79,9 @@ export function Header() {
               </span>
             )}
 
-            {isSolana && solanaPubkey && (
-              <span className="text-sm text-gray-400" title={solanaPubkey}>
-                {buildAddressString(solanaPubkey)}
+            {isSolana && solanaAddress && (
+              <span className="text-sm text-gray-400" title={solanaAddress}>
+                {buildAddressString(solanaAddress)}
               </span>
             )}
 
