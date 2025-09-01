@@ -25,16 +25,6 @@ export default function SuiPage() {
 
       <ConnectButton />
 
-      <div className="mb-6">
-        <button
-          onClick={() => setShowTransferModal(true)}
-          className="flex items-center gap-2 bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
-        >
-          <Send className="w-4 h-4" />
-          New Transfer
-        </button>
-      </div>
-
       {showTransferModal && (
         <TransferCard
           title="SUI Transfer"
@@ -61,7 +51,20 @@ export default function SuiPage() {
       )}
 
       <div className="mt-8">
-        <h2 className="text-xl mb-2">Recent Transactions</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl">Recent Transactions</h2>
+
+          <button
+            onClick={() => setShowTransferModal(true)}
+            className="flex items-center gap-2 bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300
+            hover:to-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform 
+            hover:scale-105"
+          >
+            <Send className="w-4 h-4" />
+            New Transfer
+          </button>
+        </div>
+
         {loading ? (
           <div>Loading…</div>
         ) : error ? (
