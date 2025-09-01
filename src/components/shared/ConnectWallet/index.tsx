@@ -1,7 +1,13 @@
 import { Wallet } from "lucide-react";
 import { ConnectWalletProps } from "./types";
+import { ConnectModal } from "@suiet/wallet-kit";
+import { useState } from "react";
+import { useAppKit } from "@reown/appkit/react";
 
 export function ConnectWallet({ chain }: ConnectWalletProps) {
+  const { open } = useAppKit();
+  const [showSuiModal, setShowSuiModal] = useState<boolean>(false);
+
   const isSui = chain === "sui";
 
   const buttonStyles = isSui
@@ -9,6 +15,10 @@ export function ConnectWallet({ chain }: ConnectWalletProps) {
     : "bg-gray-800 hover:bg-gray-700 text-white";
 
   const chainName = chain.charAt(0).toUpperCase() + chain.slice(1);
+
+  const handleSolanaConnect = async () => {
+    open({ view: "Connect", namespace: "solana" });
+  };
 
   return (
     <main className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-3 sm:px-4">
@@ -28,11 +38,26 @@ export function ConnectWallet({ chain }: ConnectWalletProps) {
           {chainName} network.
         </p>
 
-        <button
-          className={`${buttonStyles} px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg transition-all duration-200 hover:scale-105`}
-        >
-          Connect {chainName} Wallet
-        </button>
+        {isSui ? (
+          <ConnectModal
+            open={showSuiModal}
+            onOpenChange={(open) => setShowSuiModal(open)}
+          >
+            <button
+              onClick={() => setShowSuiModal(true)}
+              className={`${buttonStyles} px-6 sm:px-8 py-2.5 sm:py-3 cursor-pointer rounded-lg font-semibold text-base sm:text-lg transition-all duration-200 hover:scale-105`}
+            >
+              Connect {chainName} Wallet
+            </button>
+          </ConnectModal>
+        ) : (
+          <button
+            className={`${buttonStyles} px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg cursor-pointer font-semibold text-base sm:text-lg transition-all duration-200 hover:scale-105`}
+            onClick={handleSolanaConnect}
+          >
+            Connect {chainName} Wallet
+          </button>
+        )}
       </div>
     </main>
   );
