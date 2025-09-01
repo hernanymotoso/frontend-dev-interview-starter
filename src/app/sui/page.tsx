@@ -9,16 +9,20 @@ import { useSuietProvider } from "@/lib/suiet";
 import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
 import { TransactionError } from "@/components/shared/TransactionError";
+import { ConnectWallet } from "@/components/shared/ConnectWallet";
+import { useWallet } from "@suiet/wallet-kit";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
-  const address = provider?.account.address ?? null;
+  const { connected, address } = useWallet();
   const [showTransferModal, setShowTransferModal] = useState(false);
 
   const { data, loading, error, refetch } = useSuiTransactions(
     address ?? undefined
   );
   const [busy, setBusy] = useState(false);
+
+  if (!connected) return <ConnectWallet chain="sui" />;
 
   return (
     <main className="container mx-auto p-8">
@@ -27,7 +31,7 @@ export default function SuiPage() {
       {showTransferModal && (
         <TransferCard
           title="SUI Transfer"
-          from={address}
+          from={address!}
           unitLabel="SUI"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSui) => {

@@ -9,21 +9,23 @@ import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
 import { TransactionError } from "@/components/shared/TransactionError";
 import { extractErrorMessage } from "@/helpers/error";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { ConnectWallet } from "@/components/shared/ConnectWallet";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
-  const pubkey = provider?.publicKey?.toBase58() ?? null;
+  const { address, isConnected } = useAppKitAccount();
   const [showTransferModal, setShowTransferModal] = useState(false);
 
-  console.log({ pubkey });
-
   const { data, loading, error, refetch } = useSolanaTransactions(
-    pubkey ?? undefined
+    address ?? undefined
   );
 
   const [busy, setBusy] = useState(false);
 
   console.log({ data, loading, error, refetch });
+
+  if (!isConnected) return <ConnectWallet chain="solana" />;
 
   return (
     <main className="container mx-auto p-8">
@@ -32,7 +34,7 @@ export default function SolanaPage() {
       {showTransferModal && (
         <TransferCard
           title="Solana Transfer"
-          from={pubkey}
+          from={address!}
           unitLabel="SOL"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSol) => {
