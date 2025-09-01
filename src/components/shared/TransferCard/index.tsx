@@ -22,7 +22,7 @@ export function TransferCard({
           <h3 className="text-lg font-semibold text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1"
+            className="text-gray-400 cursor-pointer hover:text-white transition-colors p-1"
           >
             <X className="w-5 h-5" />
           </button>
@@ -74,7 +74,9 @@ export function TransferCard({
         </div>
 
         <button
-          className="w-full bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400
+           text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] 
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           onClick={async () => {
             if (to && amt > 0) {
               await onSubmit(to, amt);

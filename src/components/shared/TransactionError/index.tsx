@@ -22,7 +22,8 @@ export function TransactionError({
 
         <button
           onClick={refetch}
-          className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+          className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white 
+            px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-200 hover:scale-105"
         >
           Try Again
         </button>

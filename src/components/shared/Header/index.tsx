@@ -89,7 +89,7 @@ const MenuButton = forwardRef<HTMLButtonElement, MenuButtonProps>(
       <button
         ref={ref}
         onClick={toggle}
-        className={`md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-lg transition-all duration-200 ${
+        className={`md:hidden flex flex-col justify-center items-center cursor-pointer w-10 h-10 rounded-lg transition-all duration-200 ${
           isOpen ? "bg-gray-800" : "hover:bg-gray-800"
         }`}
         aria-label="Toggle mobile menu"

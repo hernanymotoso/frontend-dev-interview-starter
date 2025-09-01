@@ -40,7 +40,7 @@ function Button({ label, onClick }: ButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="rounded-lg bg-[#1d1e2c] px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-700"
+      className="rounded-lg bg-[#1d1e2c] px-4 py-2 cursor-pointer text-sm font-medium transition-colors hover:bg-gray-700"
     >
       {label}
     </button>

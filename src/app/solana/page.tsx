@@ -60,7 +60,7 @@ export default function SolanaPage() {
 
           <button
             onClick={() => setShowTransferModal(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300
+            className="flex items-center gap-2 bg-gradient-to-r cursor-pointer from-gray-200 to-gray-300 hover:from-gray-300
             hover:to-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform 
             hover:scale-105 text-xs sm:text-base"
           >
