@@ -9,5 +9,6 @@ export type MenuButtonProps = {
 export type MenuDropDownProps = {
   isOpen: boolean;
   toggle: () => void;
+  showWalletSection: boolean;
   ref?: RefObject<HTMLDivElement | null>;
 };

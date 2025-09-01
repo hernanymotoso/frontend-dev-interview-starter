@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef, forwardRef } from "react";
+import { usePathname } from "next/navigation";
 import { MenuButtonProps, MenuDropDownProps } from "./types";
 
 export function Header() {
+  const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const showWalletSection = pathname === "/sui" || pathname === "/solana";
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -56,17 +60,25 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
-          <span className="text-sm text-gray-400">connected wallet</span>
-          <button className="rounded-lg bg-[#1d1e2c] px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-700">
-            Disconect
-          </button>
-        </div>
+        {showWalletSection && (
+          <div className="hidden md:flex items-center gap-4">
+            <span className="text-sm text-gray-400">connected wallet</span>
+
+            <button className="rounded-lg bg-[#1d1e2c] px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-700">
+              Disconect
+            </button>
+          </div>
+        )}
 
         <MenuButton isOpen={isMenuOpen} toggle={toggleMenu} ref={buttonRef} />
       </div>
 
-      <MenuDropDown isOpen={isMenuOpen} toggle={toggleMenu} ref={menuRef} />
+      <MenuDropDown
+        isOpen={isMenuOpen}
+        toggle={toggleMenu}
+        showWalletSection={showWalletSection}
+        ref={menuRef}
+      />
     </header>
   );
 }
@@ -107,7 +119,7 @@ const MenuButton = forwardRef<HTMLButtonElement, MenuButtonProps>(
 MenuButton.displayName = "MenuButton";
 
 const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
-  ({ isOpen, toggle }, ref) => {
+  ({ isOpen, toggle, showWalletSection }, ref) => {
     return (
       <div
         ref={ref}
@@ -136,15 +148,17 @@ const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
             </Link>
           </nav>
 
-          <div className="p-4 border-t border-gray-700 bg-[#1d1e2c]">
-            <div className="mb-4">
-              <span className="text-sm text-gray-400">connected wallet</span>
-            </div>
+          {showWalletSection && (
+            <div className="p-4 border-t border-gray-700 bg-[#1d1e2c]">
+              <div className="mb-4">
+                <span className="text-sm text-gray-400">connected wallet</span>
+              </div>
 
-            <button className="w-full rounded-lg bg-gray-800 px-4 py-3 text-sm font-medium transition-colors hover:bg-gray-700">
-              Disconect
-            </button>
-          </div>
+              <button className="w-full rounded-lg bg-gray-800 px-4 py-3 text-sm font-medium transition-colors hover:bg-gray-700">
+                Disconect
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
