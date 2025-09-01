@@ -13,30 +13,28 @@ export function SuiWallet({ isHidden }: SuiWalletProps) {
     setShowModal(false);
   };
 
-  if (connected) {
-    return (
-      <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
-        {address && (
-          <span className="text-sm text-gray-400" title={address}>
-            {buildAddressString(address)}
-          </span>
-        )}
+  return (
+    <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
+      {connected ? (
+        <>
+          {address && (
+            <span className="text-sm text-gray-400 mr-2" title={address}>
+              {buildAddressString(address)}
+            </span>
+          )}
 
-        <Button label="Disconect" onClick={handleDisconect} />
-      </div>
-    );
-  } else {
-    return (
-      <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
+          <Button label="Disconect" onClick={handleDisconect} />
+        </>
+      ) : (
         <ConnectModal
           open={showModal}
           onOpenChange={(open) => setShowModal(open)}
         >
           <Button label="Connect" onClick={() => setShowModal(true)} />
         </ConnectModal>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }
 
 // Maybe move this to own component

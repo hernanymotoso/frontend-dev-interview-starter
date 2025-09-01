@@ -22,7 +22,7 @@ export function SolanaWallet({ isHidden }: SolanaWalletProps) {
     <div className={clsx("md:flex items-center gap-4", isHidden && "hidden")}>
       {isConnected ? (
         <>
-          <span className="text-sm text-gray-400" title={address}>
+          <span className="text-sm text-gray-400 mr-2" title={address}>
             {buildAddressString(address)}
           </span>
 
