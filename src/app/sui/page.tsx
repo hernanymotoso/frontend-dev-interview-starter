@@ -7,6 +7,8 @@ import { TransferCard } from "@/components/shared/TransferCard";
 import { createSuiTransfer } from "@/lib/suiTransfer";
 import { useSuietProvider } from "@/lib/suiet";
 import { Send } from "lucide-react";
+import { TransactionLoading } from "@/components/shared/TransactionLoading";
+import { TransactionError } from "@/components/shared/TransactionError";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
@@ -63,9 +65,12 @@ export default function SuiPage() {
         </div>
 
         {loading ? (
-          <div>Loading…</div>
+          <TransactionLoading />
         ) : error ? (
-          <div>Error: {String(error.message || error)}</div>
+          <TransactionError
+            refetch={refetch}
+            errorMessage={String(error?.message || error)}
+          />
         ) : (
           <TransactionTable transactions={data as any} />
         )}

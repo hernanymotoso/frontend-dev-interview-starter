@@ -6,6 +6,9 @@ import { TransferCard } from "@/components/shared/TransferCard";
 import { createSolanaTransfer } from "@/lib/solanaTransfer";
 import { useReownSolanaProvider } from "@/lib/reown";
 import { Send } from "lucide-react";
+import { TransactionLoading } from "@/components/shared/TransactionLoading";
+import { TransactionError } from "@/components/shared/TransactionError";
+import { extractErrorMessage } from "@/helpers/error";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
@@ -65,9 +68,14 @@ export default function SolanaPage() {
         </div>
 
         {loading ? (
-          <div>Loading…</div>
+          <TransactionLoading />
         ) : error ? (
-          <div>Error: {String(error.message || error)}</div>
+          <TransactionError
+            refetch={refetch}
+            errorMessage={String(
+              error?.message || extractErrorMessage(error) || error
+            )}
+          />
         ) : (
           <TransactionTable transactions={data as any} />
         )}
