@@ -1,22 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { confirmTransfer } from "@/actions/solana/confirmTransfer";
-import { prepareTransfer } from "@/actions/solana/prepareTransfer";
-import { Transaction } from "@solana/web3.js";
+import { confirmTransfer } from "@/actions/sui/confirmTransfer";
+import { prepareTransfer } from "@/actions/sui/prepareTransfer";
+import { Transaction } from "@mysten/sui/transactions";
 import { useState } from "react";
+import { SuietProvider } from "./types";
 
-export type ReownSolanaProvider = {
-  publicKey: { toBase58(): string };
-  signAndSendTransaction(tx: Transaction): Promise<{ signature: string }>;
-};
-
-export function useSolanaTransfer() {
+export function useSuiTransfer() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const createTransfer = async (
     toAddress: string,
-    amountSol: number,
-    provider: ReownSolanaProvider | null
+    amountSui: number,
+    provider: SuietProvider | null
   ) => {
     try {
       setIsLoading(true);
@@ -26,9 +21,9 @@ export function useSolanaTransfer() {
 
       const [prepareTransferData, prepareTransferError] = await prepareTransfer(
         {
-          fromAddress: provider.publicKey.toBase58(),
+          fromAddress: provider.account.address,
           toAddress,
-          amountSol,
+          amountSui,
         }
       );
 
@@ -38,21 +33,18 @@ export function useSolanaTransfer() {
         throw new Error(prepareTransferError?.message || "any error");
       }
 
-      const { serializedTransaction, blockhash, lastValidBlockHeight } =
-        prepareTransferData;
+      const { serializedTransaction } = prepareTransferData;
+      const transaction = Transaction.from(serializedTransaction);
 
-      const transaction = Transaction.from(
-        Buffer.from(serializedTransaction, "base64")
-      );
-
-      const { signature } = await provider.signAndSendTransaction(transaction);
+      const result = await provider.signAndExecuteTransaction({
+        transaction,
+        options: {
+          showEffects: true,
+        },
+      });
 
       const [confirmTransferData, confirmTransferError] = await confirmTransfer(
-        {
-          blockhash,
-          lastValidBlockHeight,
-          signature,
-        }
+        { digest: result.digest }
       );
 
       // TODO: Improve error handler
@@ -61,8 +53,15 @@ export function useSolanaTransfer() {
         throw new Error(confirmTransferError?.message || "any error");
       }
 
-      console.log("Sent tx:", signature);
-      return { signature, confirmed: confirmTransferData.confirmed };
+      const { confirmed, status } = confirmTransferData;
+
+      console.log("Sent tx digest:", result.digest);
+
+      return {
+        digest: result.digest,
+        confirmed: confirmed || false,
+        status: status || "unknown",
+      };
     } catch (error: any) {
       const errorMessage = error.message || "unknown error";
       setError(errorMessage);

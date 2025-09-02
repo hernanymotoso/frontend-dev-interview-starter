@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useSuiTransactions } from "@/hooks/useSuiTransactions";
 import { TransactionTable } from "@/components/shared/TransactionTable";
 import { TransferCard } from "@/components/shared/TransferCard";
-import { createSuiTransfer } from "@/lib/suiTransfer";
 import { useSuietProvider } from "@/lib/suiet";
 import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
 import { TransactionError } from "@/components/shared/TransactionError";
 import { ConnectWallet } from "@/components/shared/ConnectWallet";
 import { useWallet } from "@suiet/wallet-kit";
+import { useSuiTransfer } from "@/hooks/useSuiTransfer";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
@@ -21,6 +21,14 @@ export default function SuiPage() {
     address ?? undefined
   );
   const [busy, setBusy] = useState(false);
+
+  const {
+    createTransfer,
+    isLoading,
+    error: createTransferError,
+  } = useSuiTransfer();
+
+  console.log({ isLoading, createTransferError });
 
   if (!connected) return <ConnectWallet chain="sui" />;
 
@@ -35,16 +43,16 @@ export default function SuiPage() {
           unitLabel="SUI"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSui) => {
-            if (!provider) return alert("Connect wallet first");
             if (!to || amountSui <= 0)
               return alert("Recipient and amount required");
             setBusy(true);
             try {
-              const digest = await createSuiTransfer(provider, to, amountSui);
+              const digest = await createTransfer(to, amountSui, provider);
               console.log("Sent tx digest:", digest);
               await refetch();
               setShowTransferModal(false);
             } catch (e: any) {
+              console.log("errorrrrr", e);
               alert(e.message || "Failed");
             } finally {
               setBusy(false);

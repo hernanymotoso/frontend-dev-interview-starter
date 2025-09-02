@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useWallet } from '@suiet/wallet-kit';
-import { SuietProvider } from './suiTransfer';
+import { SuietProvider } from "@/hooks/useSuiTransfer/types";
+import { useWallet } from "@suiet/wallet-kit";
 
 export function useSuietProvider(): SuietProvider | null {
   const wallet = useWallet();
@@ -11,7 +11,7 @@ export function useSuietProvider(): SuietProvider | null {
   return {
     account: {
       address: wallet.account.address,
-      publicKey: wallet.account.publicKey as Uint8Array, 
+      publicKey: wallet.account.publicKey as Uint8Array,
     },
     signAndExecuteTransaction: wallet.signAndExecuteTransaction,
   };
