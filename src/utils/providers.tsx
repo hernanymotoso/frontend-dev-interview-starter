@@ -5,6 +5,7 @@ import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
 import { solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
 import { WalletProvider } from "@suiet/wallet-kit";
 import "@suiet/wallet-kit/style.css";
+import { Toaster } from "react-hot-toast";
 
 const solanaWeb3JsAdapter = new SolanaAdapter();
 
@@ -25,5 +26,10 @@ createAppKit({
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <WalletProvider>{children}</WalletProvider>;
+  return (
+    <WalletProvider>
+      {children}
+      <Toaster position="top-right" />
+    </WalletProvider>
+  );
 }
