@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { useState } from "react";
 import { useSuiTransactions } from "@/hooks/useSuiTransactions";
 import { TransactionTable } from "@/components/shared/TransactionTable";
@@ -11,6 +11,7 @@ import { TransactionError } from "@/components/shared/TransactionError";
 import { ConnectWallet } from "@/components/shared/ConnectWallet";
 import { useWallet } from "@suiet/wallet-kit";
 import { useSuiTransfer } from "@/hooks/useSuiTransfer";
+import toast from "react-hot-toast";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
@@ -20,15 +21,17 @@ export default function SuiPage() {
   const { data, loading, error, refetch } = useSuiTransactions(
     address ?? undefined
   );
-  const [busy, setBusy] = useState(false);
 
-  const {
-    createTransfer,
-    isLoading,
-    error: createTransferError,
-  } = useSuiTransfer();
-
-  console.log({ isLoading, createTransferError });
+  const { createTransfer, isLoading } = useSuiTransfer({
+    onSuccess() {
+      toast.success(`Transfer successfully`);
+      refetch();
+      setShowTransferModal(false);
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
 
   if (!connected) return <ConnectWallet chain="sui" />;
 
@@ -40,23 +43,11 @@ export default function SuiPage() {
         <TransferCard
           title="SUI Transfer"
           from={address!}
+          isLoading={isLoading}
           unitLabel="SUI"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSui) => {
-            if (!to || amountSui <= 0)
-              return alert("Recipient and amount required");
-            setBusy(true);
-            try {
-              const digest = await createTransfer(to, amountSui, provider);
-              console.log("Sent tx digest:", digest);
-              await refetch();
-              setShowTransferModal(false);
-            } catch (e: any) {
-              console.log("errorrrrr", e);
-              alert(e.message || "Failed");
-            } finally {
-              setBusy(false);
-            }
+            await createTransfer(to, amountSui, provider);
           }}
         />
       )}
@@ -87,10 +78,6 @@ export default function SuiPage() {
           <TransactionTable transactions={data as any} />
         )}
       </div>
-
-      {busy && (
-        <div className="mt-2 text-xs text-[var(--muted)]">Submitting…</div>
-      )}
     </main>
   );
 }
