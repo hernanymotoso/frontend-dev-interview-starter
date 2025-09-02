@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { confirmTransfer } from "@/actions/solana/confirmTransfer";
 import { prepareTransfer } from "@/actions/solana/prepareTransfer";
 import { Transaction } from "@solana/web3.js";
@@ -62,12 +61,16 @@ export function useSolanaTransfer(params?: UseSolanaTransferParams) {
       }
 
       console.log("Sent tx:", signature);
-      return { signature, confirmed: confirmTransferData.confirmed };
+
+      const response = { signature, confirmed: confirmTransferData.confirmed };
+      if (params?.onSuccess) params.onSuccess(response);
+      return response;
     } catch (error: any) {
       console.log("error", error);
       const errorMessage = error.message || "unknown error";
       setError(errorMessage);
       if (params?.onError) params.onError(error);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
