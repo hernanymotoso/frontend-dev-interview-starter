@@ -3,13 +3,13 @@ import { confirmTransfer } from "@/actions/solana/confirmTransfer";
 import { prepareTransfer } from "@/actions/solana/prepareTransfer";
 import { Transaction } from "@solana/web3.js";
 import { useState } from "react";
+import {
+  CreateTransferResponse,
+  ReownSolanaProvider,
+  UseSolanaTransferParams,
+} from "./types";
 
-export type ReownSolanaProvider = {
-  publicKey: { toBase58(): string };
-  signAndSendTransaction(tx: Transaction): Promise<{ signature: string }>;
-};
-
-export function useSolanaTransfer() {
+export function useSolanaTransfer(params?: UseSolanaTransferParams) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +17,7 @@ export function useSolanaTransfer() {
     toAddress: string,
     amountSol: number,
     provider: ReownSolanaProvider | null
-  ) => {
+  ): Promise<CreateTransferResponse | undefined> => {
     try {
       setIsLoading(true);
       setError(null);
@@ -64,9 +64,10 @@ export function useSolanaTransfer() {
       console.log("Sent tx:", signature);
       return { signature, confirmed: confirmTransferData.confirmed };
     } catch (error: any) {
+      console.log("error", error);
       const errorMessage = error.message || "unknown error";
       setError(errorMessage);
-      throw new Error(errorMessage);
+      if (params?.onError) params.onError(error);
     } finally {
       setIsLoading(false);
     }
