@@ -49,10 +49,13 @@ export function TransferCard({
           <div>
             <label className="block text-gray-400 text-sm mb-2">To</label>
             <input
-              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm 
+              placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 
+                disabled:cursor-not-allowed"
               placeholder="Enter recipient address"
               value={to}
               onChange={(e) => setTo(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -62,10 +65,13 @@ export function TransferCard({
             </label>
 
             <input
-              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm 
+              placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 
+                disabled:cursor-not-allowed"
               type="number"
               value={amt}
               onChange={(e) => setAmt(Number(e.target.value))}
+              disabled={isLoading}
             />
           </div>
         </div>
