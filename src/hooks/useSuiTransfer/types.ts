@@ -10,3 +10,14 @@ export type SuietProvider = {
     options?: any;
   }): Promise<{ digest: string }>;
 };
+
+export type UseSuiTransferParams = {
+  onSuccess?: (data: CreateTransferResponse) => void;
+  onError?: (error: any) => void;
+};
+
+export type CreateTransferResponse = {
+  digest: string;
+  confirmed: boolean;
+  status: string;
+};

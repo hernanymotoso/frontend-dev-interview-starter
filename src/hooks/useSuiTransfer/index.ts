@@ -2,9 +2,13 @@ import { confirmTransfer } from "@/actions/sui/confirmTransfer";
 import { prepareTransfer } from "@/actions/sui/prepareTransfer";
 import { Transaction } from "@mysten/sui/transactions";
 import { useState } from "react";
-import { SuietProvider } from "./types";
+import {
+  CreateTransferResponse,
+  SuietProvider,
+  UseSuiTransferParams,
+} from "./types";
 
-export function useSuiTransfer() {
+export function useSuiTransfer(params?: UseSuiTransferParams) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +16,7 @@ export function useSuiTransfer() {
     toAddress: string,
     amountSui: number,
     provider: SuietProvider | null
-  ) => {
+  ): Promise<CreateTransferResponse | undefined> => {
     try {
       setIsLoading(true);
       setError(null);
@@ -57,15 +61,19 @@ export function useSuiTransfer() {
 
       console.log("Sent tx digest:", result.digest);
 
-      return {
+      const response = {
         digest: result.digest,
         confirmed: confirmed || false,
         status: status || "unknown",
       };
+      if (params?.onSuccess) params.onSuccess(response);
+      return response;
     } catch (error: any) {
+      console.log("error", error);
       const errorMessage = error.message || "unknown error";
       setError(errorMessage);
-      throw new Error(errorMessage);
+      if (params?.onError) params.onError(error);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
