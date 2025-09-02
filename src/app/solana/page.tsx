@@ -11,6 +11,7 @@ import { extractErrorMessage } from "@/helpers/error";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { ConnectWallet } from "@/components/shared/ConnectWallet";
 import { useSolanaTransfer } from "@/hooks/useSolanaTransfer";
+import toast from "react-hot-toast";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
@@ -21,17 +22,18 @@ export default function SolanaPage() {
     address ?? undefined
   );
 
-  const {
-    createTransfer,
-    isLoading,
-    error: errorOnSolanaTransfer,
-  } = useSolanaTransfer();
+  const { createTransfer, isLoading } = useSolanaTransfer({
+    onSuccess() {
+      toast.success("Transfer successfully");
+      refetch();
+      setShowTransferModal(false);
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
 
-  console.log({ isLoading, errorOnSolanaTransfer });
-
-  const [busy, setBusy] = useState(false);
-
-  // console.log({ data, loading, error, refetch });
+  console.log({ isLoading });
 
   if (!isConnected) return <ConnectWallet chain="solana" />;
 
@@ -46,17 +48,7 @@ export default function SolanaPage() {
           unitLabel="SOL"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSol) => {
-            setBusy(true);
-            try {
-              const sig = await createTransfer(to, amountSol, provider);
-              console.log("Sent tx:", sig);
-              await refetch();
-              setShowTransferModal(false);
-            } catch (e: any) {
-              alert(e.message || "Failed");
-            } finally {
-              setBusy(false);
-            }
+            await createTransfer(to, amountSol, provider);
           }}
         />
       )}
@@ -89,10 +81,6 @@ export default function SolanaPage() {
           <TransactionTable transactions={data as any} />
         )}
       </div>
-
-      {busy && (
-        <div className="mt-2 text-xs text-[var(--muted)]">Submitting…</div>
-      )}
     </main>
   );
 }
