@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useSolanaTransactions } from "@/hooks/useSolanaTransactions";
 import { TransactionTable } from "@/components/shared/TransactionTable";
 import { TransferCard } from "@/components/shared/TransferCard";
-import { createSolanaTransfer } from "@/lib/solanaTransfer";
 import { useReownSolanaProvider } from "@/lib/reown";
 import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
@@ -11,6 +10,7 @@ import { TransactionError } from "@/components/shared/TransactionError";
 import { extractErrorMessage } from "@/helpers/error";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { ConnectWallet } from "@/components/shared/ConnectWallet";
+import { useSolanaTransfer } from "@/hooks/useSolanaTransfer";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
@@ -21,9 +21,17 @@ export default function SolanaPage() {
     address ?? undefined
   );
 
+  const {
+    createTransfer,
+    isLoading,
+    error: errorOnSolanaTransfer,
+  } = useSolanaTransfer();
+
+  console.log({ isLoading, errorOnSolanaTransfer });
+
   const [busy, setBusy] = useState(false);
 
-  console.log({ data, loading, error, refetch });
+  // console.log({ data, loading, error, refetch });
 
   if (!isConnected) return <ConnectWallet chain="solana" />;
 
@@ -38,10 +46,9 @@ export default function SolanaPage() {
           unitLabel="SOL"
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSol) => {
-            if (!provider) return alert("Connect wallet first");
             setBusy(true);
             try {
-              const sig = await createSolanaTransfer(provider, to, amountSol);
+              const sig = await createTransfer(to, amountSol, provider);
               console.log("Sent tx:", sig);
               await refetch();
               setShowTransferModal(false);
