@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, Loader } from "lucide-react";
 import { useState } from "react";
 import { TransferCardProps } from "./types";
 
@@ -10,6 +10,7 @@ export function TransferCard({
   onSubmit,
   unitLabel,
   onClose,
+  isLoading = false,
 }: TransferCardProps) {
   const [to, setTo] = useState("");
   const [amt, setAmt] = useState<number>(0);
@@ -76,15 +77,16 @@ export function TransferCard({
         <button
           className="w-full bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400
            text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] 
-           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
           onClick={async () => {
             if (to && amt > 0) {
               await onSubmit(to, amt);
             }
           }}
-          disabled={!to || amt <= 0}
+          disabled={!to || amt <= 0 || isLoading}
         >
-          Send
+          {isLoading && <Loader className="w-4 h-4 animate-spin" />}
+          {isLoading ? "Sending..." : "Send"}
         </button>
       </div>
     </div>

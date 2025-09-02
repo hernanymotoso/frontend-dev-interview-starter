@@ -4,4 +4,5 @@ export type TransferCardProps = {
   onSubmit: (to: string, amount: number) => Promise<void>;
   unitLabel: string; // SOL or SUI
   onClose?: () => void;
+  isLoading?: boolean;
 };
