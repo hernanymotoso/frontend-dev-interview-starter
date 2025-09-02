@@ -33,8 +33,6 @@ export default function SolanaPage() {
     },
   });
 
-  console.log({ isLoading });
-
   if (!isConnected) return <ConnectWallet chain="solana" />;
 
   return (
@@ -46,6 +44,7 @@ export default function SolanaPage() {
           title="Solana Transfer"
           from={address!}
           unitLabel="SOL"
+          isLoading={isLoading}
           onClose={() => setShowTransferModal(false)}
           onSubmit={async (to, amountSol) => {
             await createTransfer(to, amountSol, provider);
