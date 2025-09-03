@@ -72,7 +72,7 @@ export function Header() {
           </Link>
         </nav>
 
-        {showWalletSection && isSui && <SuiWallet />}
+        {showWalletSection && isSui && <SuiWallet isHidden />}
 
         {showWalletSection && isSolana && <SolanaWallet isHidden />}
 
