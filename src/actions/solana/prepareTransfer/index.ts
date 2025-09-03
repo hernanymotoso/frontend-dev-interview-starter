@@ -14,7 +14,7 @@ export const prepareTransfer = solanaProcedure
     const { connection } = ctx;
     const fromPubkey = new PublicKey(input.fromAddress);
     const toPubkey = new PublicKey(input.toAddress);
-    const lamports = Math.round(input.amountSol * LAMPORTS_PER_SOL);
+    const lamports = Math.round(input.amount * LAMPORTS_PER_SOL);
 
     const balance = await connection.getBalance(fromPubkey);
     if (balance < lamports) throw new Error("Insufficient balance");

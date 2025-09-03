@@ -14,7 +14,7 @@ export function useSolanaTransfer(params?: UseSolanaTransferParams) {
 
   const createTransfer = async (
     toAddress: string,
-    amountSol: number,
+    amount: number,
     provider: ReownSolanaProvider | null
   ): Promise<CreateTransferResponse | undefined> => {
     try {
@@ -27,14 +27,17 @@ export function useSolanaTransfer(params?: UseSolanaTransferParams) {
         {
           fromAddress: provider.publicKey.toBase58(),
           toAddress,
-          amountSol,
+          amount,
         }
       );
 
       // TODO: Improve error handler
       if (prepareTransferError) {
         console.log({ prepareTransferError });
-        throw new Error(prepareTransferError?.message || "any error");
+        if (!prepareTransferError?.fieldErrors) {
+          throw new Error(prepareTransferError.message);
+        }
+        throw new Error("Internal server error");
       }
 
       const { serializedTransaction, blockhash, lastValidBlockHeight } =
@@ -57,7 +60,10 @@ export function useSolanaTransfer(params?: UseSolanaTransferParams) {
       // TODO: Improve error handler
       if (confirmTransferError) {
         console.log({ confirmTransferError });
-        throw new Error(confirmTransferError?.message || "any error");
+        if (!confirmTransferError?.fieldErrors) {
+          throw new Error(confirmTransferError.message);
+        }
+        throw new Error("Internal server error");
       }
 
       console.log("Sent tx:", signature);

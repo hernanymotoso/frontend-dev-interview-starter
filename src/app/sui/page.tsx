@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSuiTransactions } from "@/hooks/useSuiTransactions";
 import { TransactionTable } from "@/components/shared/TransactionTable";
-import { TransferCard } from "@/components/shared/TransferCard";
+import TransferCard from "@/components/shared/TransferCard";
 import { useSuietProvider } from "@/lib/suiet";
 import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
@@ -12,11 +12,13 @@ import { ConnectWallet } from "@/components/shared/ConnectWallet";
 import { useWallet } from "@suiet/wallet-kit";
 import { useSuiTransfer } from "@/hooks/useSuiTransfer";
 import toast from "react-hot-toast";
+import { TransferCardRef } from "@/components/shared/TransferCard/types";
 
 export default function SuiPage() {
   const provider = useSuietProvider();
   const { connected, address } = useWallet();
   const [showTransferModal, setShowTransferModal] = useState(false);
+  const formRef = useRef<TransferCardRef>(null);
 
   const { data, loading, error, refetch } = useSuiTransactions(
     address ?? undefined
@@ -25,10 +27,13 @@ export default function SuiPage() {
   const { createTransfer, isLoading } = useSuiTransfer({
     onSuccess() {
       toast.success(`Transfer successfully`);
+      formRef.current?.formReset({ toAddress: "", amount: 0 });
       refetch();
       setShowTransferModal(false);
     },
     onError(error) {
+      formRef.current?.formReset({ toAddress: "", amount: 0 });
+      setShowTransferModal(false);
       toast.error(error.message);
     },
   });
@@ -41,6 +46,7 @@ export default function SuiPage() {
 
       {showTransferModal && (
         <TransferCard
+          ref={formRef}
           title="SUI Transfer"
           from={address!}
           isLoading={isLoading}

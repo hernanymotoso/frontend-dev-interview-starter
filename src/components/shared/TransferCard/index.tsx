@@ -1,19 +1,43 @@
 "use client";
 
 import { X, Loader } from "lucide-react";
-import { useState } from "react";
-import { TransferCardProps } from "./types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  TransferCardProps,
+  TransferCardRef,
+  TransferFormData,
+  createTransferFormSchema,
+} from "./types";
+import { forwardRef, useImperativeHandle } from "react";
 
-export function TransferCard({
-  title,
-  from,
-  onSubmit,
-  unitLabel,
-  onClose,
-  isLoading = false,
-}: TransferCardProps) {
-  const [to, setTo] = useState("");
-  const [amt, setAmt] = useState<number>(0);
+const TransferCard = forwardRef<TransferCardRef, TransferCardProps>(function (
+  { title, from, unitLabel, isLoading, onSubmit, onClose },
+  ref
+) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<TransferFormData>({
+    resolver: zodResolver(createTransferFormSchema(unitLabel)),
+    defaultValues: {
+      toAddress: "",
+      amount: 0,
+    },
+    mode: "onTouched",
+  });
+
+  useImperativeHandle(ref, () => ({
+    formReset(data) {
+      reset(data);
+    },
+    formSetError(field, message) {
+      setError(field, { type: "manual", message });
+    },
+  }));
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
@@ -45,18 +69,34 @@ export function TransferCard({
           </div>
         </div>
 
-        <div className="space-y-4 mb-6">
+        <form
+          id="transfer-form"
+          onSubmit={handleSubmit(({ toAddress, amount }) =>
+            onSubmit(toAddress, amount)
+          )}
+          className="space-y-4 mb-6"
+        >
           <div>
             <label className="block text-gray-400 text-sm mb-2">To</label>
+
             <input
-              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm 
-              placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 
-                disabled:cursor-not-allowed"
+              {...register("toAddress")}
+              className={`w-full bg-gray-900/50 border rounded-xl px-4 py-3 text-white text-sm 
+              placeholder-gray-500 focus:outline-none transition-colors disabled:opacity-50 
+                disabled:cursor-not-allowed ${
+                  errors.toAddress
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-700 focus:border-blue-500"
+                }`}
               placeholder="Enter recipient address"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
               disabled={isLoading}
             />
+
+            {errors.toAddress && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.toAddress.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -65,31 +105,38 @@ export function TransferCard({
             </label>
 
             <input
-              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm 
-              placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 
-                disabled:cursor-not-allowed"
+              {...register("amount", { valueAsNumber: true })}
+              className={`w-full bg-gray-900/50 border rounded-xl px-4 py-3 text-white text-sm 
+              placeholder-gray-500 focus:outline-none transition-colors disabled:opacity-50 
+                disabled:cursor-not-allowed ${
+                  errors.amount
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-700 focus:border-blue-500"
+                }`}
               type="number"
-              value={amt}
-              onChange={(e) => setAmt(Number(e.target.value))}
+              step="0.000001"
               disabled={isLoading}
             />
+
+            {errors.amount && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.amount.message}
+              </p>
+            )}
           </div>
-        </div>
+        </form>
 
         <div className="text-xs text-gray-500 mb-6 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
           ⚠️ Please double-check the recipient address before sending.
         </div>
 
         <button
+          type="submit"
+          form="transfer-form"
           className="w-full bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400
            text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] 
            disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
-          onClick={async () => {
-            if (to && amt > 0) {
-              await onSubmit(to, amt);
-            }
-          }}
-          disabled={!to || amt <= 0 || isLoading}
+          disabled={!isValid || isLoading}
         >
           {isLoading && <Loader className="w-4 h-4 animate-spin" />}
           {isLoading ? "Sending..." : "Send"}
@@ -97,4 +144,7 @@ export function TransferCard({
       </div>
     </div>
   );
-}
+});
+
+TransferCard.displayName = "TransferCard";
+export default TransferCard;

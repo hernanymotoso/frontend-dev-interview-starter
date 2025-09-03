@@ -10,7 +10,7 @@ export const prepareTransferSchema = z
   .object({
     fromAddress: suiAddressSchema,
     toAddress: suiAddressSchema,
-    amountSui: z.number().positive("Amount must be greater than zero"),
+    amount: z.number().positive("Amount must be greater than zero"),
   })
   .refine((data) => data.fromAddress !== data.toAddress, {
     message: "Source and destination addresses must be different",

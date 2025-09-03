@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSolanaTransactions } from "@/hooks/useSolanaTransactions";
 import { TransactionTable } from "@/components/shared/TransactionTable";
-import { TransferCard } from "@/components/shared/TransferCard";
+import TransferCard from "@/components/shared/TransferCard";
 import { useReownSolanaProvider } from "@/lib/reown";
 import { Send } from "lucide-react";
 import { TransactionLoading } from "@/components/shared/TransactionLoading";
@@ -12,11 +12,13 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { ConnectWallet } from "@/components/shared/ConnectWallet";
 import { useSolanaTransfer } from "@/hooks/useSolanaTransfer";
 import toast from "react-hot-toast";
+import { TransferCardRef } from "@/components/shared/TransferCard/types";
 
 export default function SolanaPage() {
   const provider = useReownSolanaProvider();
   const { address, isConnected } = useAppKitAccount();
   const [showTransferModal, setShowTransferModal] = useState(false);
+  const formRef = useRef<TransferCardRef>(null);
 
   const { data, loading, error, refetch } = useSolanaTransactions(
     address ?? undefined
@@ -25,10 +27,13 @@ export default function SolanaPage() {
   const { createTransfer, isLoading } = useSolanaTransfer({
     onSuccess() {
       toast.success("Transfer successfully");
+      formRef.current?.formReset({ toAddress: "", amount: 0 });
       refetch();
       setShowTransferModal(false);
     },
     onError(error) {
+      formRef.current?.formReset({ toAddress: "", amount: 0 });
+      setShowTransferModal(false);
       toast.error(error.message);
     },
   });
@@ -41,13 +46,14 @@ export default function SolanaPage() {
 
       {showTransferModal && (
         <TransferCard
+          ref={formRef}
           title="Solana Transfer"
           from={address!}
           unitLabel="SOL"
           isLoading={isLoading}
           onClose={() => setShowTransferModal(false)}
-          onSubmit={async (to, amountSol) => {
-            await createTransfer(to, amountSol, provider);
+          onSubmit={async (toAddress, amount) => {
+            await createTransfer(toAddress, amount, provider);
           }}
         />
       )}

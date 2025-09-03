@@ -9,12 +9,12 @@ export const prepareTransfer = suiProcedure
   .input(prepareTransferSchema)
   .handler(async ({ input, ctx }) => {
     const { connection } = ctx;
-    const { fromAddress, toAddress, amountSui } = input;
+    const { fromAddress, toAddress, amount } = input;
 
     const balance = await connection.getBalance({ owner: fromAddress });
     const totalBalance = parseInt(balance.totalBalance);
 
-    const mist = Math.round(amountSui * SUI_DECIMALS);
+    const mist = Math.round(amount * SUI_DECIMALS);
 
     if (totalBalance < mist) throw new Error("Insufficient balance");
 

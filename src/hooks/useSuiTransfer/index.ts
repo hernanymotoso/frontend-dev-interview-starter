@@ -14,7 +14,7 @@ export function useSuiTransfer(params?: UseSuiTransferParams) {
 
   const createTransfer = async (
     toAddress: string,
-    amountSui: number,
+    amount: number,
     provider: SuietProvider | null
   ): Promise<CreateTransferResponse | undefined> => {
     try {
@@ -27,14 +27,17 @@ export function useSuiTransfer(params?: UseSuiTransferParams) {
         {
           fromAddress: provider.account.address,
           toAddress,
-          amountSui,
+          amount,
         }
       );
 
       // TODO: Improve error handler
       if (prepareTransferError) {
         console.log({ prepareTransferError });
-        throw new Error(prepareTransferError?.message || "any error");
+        if (!prepareTransferError?.fieldErrors) {
+          throw new Error(prepareTransferError.message);
+        }
+        throw new Error("Internal server error");
       }
 
       const { serializedTransaction } = prepareTransferData;
@@ -54,7 +57,10 @@ export function useSuiTransfer(params?: UseSuiTransferParams) {
       // TODO: Improve error handler
       if (confirmTransferError) {
         console.log({ confirmTransferError });
-        throw new Error(confirmTransferError?.message || "any error");
+        if (!confirmTransferError?.fieldErrors) {
+          throw new Error(confirmTransferError.message);
+        }
+        throw new Error("Internal server error");
       }
 
       const { confirmed, status } = confirmTransferData;
@@ -69,7 +75,6 @@ export function useSuiTransfer(params?: UseSuiTransferParams) {
       if (params?.onSuccess) params.onSuccess(response);
       return response;
     } catch (error: any) {
-      console.log("error", error);
       const errorMessage = error.message || "unknown error";
       setError(errorMessage);
       if (params?.onError) params.onError(error);
