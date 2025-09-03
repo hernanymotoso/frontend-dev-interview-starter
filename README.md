@@ -90,7 +90,7 @@ You’ll be working inside a Next.js + TypeScript repo with starter code for bot
 
 ## 🏃‍♀️ Getting Started
 
-[🎥 01 - Watch Full Demo 08-14-2025](https://drive.google.com/file/d/1p5aKdyeIJ1pVze5Co_srZEhL1CGt8VjL/view?usp=sharing)
+[🎥 01 - Watch Full Demo 09-03-2025](https://drive.google.com/file/d/1p5aKdyeIJ1pVze5Co_srZEhL1CGt8VjL/view?usp=sharing)
 
 Prerequisites:
 
