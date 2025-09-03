@@ -51,14 +51,22 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link
             href="/sui"
-            className="relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105"
+            className={`relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105 ${
+              isSui
+                ? "text-white bg-gray-800 px-3 py-1 rounded-lg"
+                : "text-gray-300"
+            }`}
           >
             <span className="relative z-10">Sui</span>
           </Link>
 
           <Link
             href="/solana"
-            className="relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105"
+            className={`relative text-base font-semibold transition-all duration-200 hover:text-white hover:scale-105 ${
+              isSolana
+                ? "text-white bg-gray-800 px-3 py-1 rounded-lg"
+                : "text-gray-300"
+            }`}
           >
             <span className="relative z-10">Solana</span>
           </Link>
@@ -120,7 +128,6 @@ MenuButton.displayName = "MenuButton";
 
 const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
   ({ isOpen, toggle, isSui, isSolana, showWalletSection }, ref) => {
-    console.log({ isSui, isSolana, showWalletSection });
     return (
       <div
         ref={ref}
@@ -134,7 +141,11 @@ const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
           <nav className="flex-1 p-4 space-y-2">
             <Link
               href="/solana"
-              className="flex items-center text-base font-semibold text-gray-300 transition-all duration-200 hover:text-white py-3 px-4 rounded-lg hover:bg-gray-800"
+              className={`flex items-center text-base font-semibold transition-all duration-200 py-3 px-4 rounded-lg ${
+                isSolana
+                  ? "text-white bg-gray-700"
+                  : "text-gray-300 hover:text-white hover:bg-gray-800"
+              }`}
               onClick={toggle}
             >
               <span className="ml-2">Solana</span>
@@ -142,7 +153,11 @@ const MenuDropDown = forwardRef<HTMLDivElement, MenuDropDownProps>(
 
             <Link
               href="/sui"
-              className="flex items-center text-base font-semibold text-gray-300 transition-all duration-200 hover:text-white py-3 px-4 rounded-lg hover:bg-gray-800"
+              className={`flex items-center text-base font-semibold transition-all duration-200 py-3 px-4 rounded-lg ${
+                isSui
+                  ? "text-white bg-gray-700"
+                  : "text-gray-300 hover:text-white hover:bg-gray-800"
+              }`}
               onClick={toggle}
             >
               <span className="ml-2">Sui</span>
