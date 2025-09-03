@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { parseTransactionDetails } from "./helpers";
@@ -30,7 +29,7 @@ export const useSolanaTransactions = (publicKey?: string) => {
     try {
       const pubkey = new PublicKey(publicKey);
       const signatures = await connection.getSignaturesForAddress(pubkey, {
-        limit: 10,
+        limit: 8,
       });
 
       if (signatures.length === 0) {

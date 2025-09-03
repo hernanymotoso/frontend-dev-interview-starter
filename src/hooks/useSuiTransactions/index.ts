@@ -34,7 +34,7 @@ export const useSuiTransactions = (address?: string) => {
               },
             },
             null,
-            10,
+            8,
             true,
           ],
         }),

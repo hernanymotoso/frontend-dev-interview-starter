@@ -16,8 +16,8 @@ export default function Page() {
 
           <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-2">
             Experience borderless payments with{" "}
-            <span className="text-white font-semibold">Mini Transfer</span>. Our
-            platform makes{" "}
+            <span className="text-white font-semibold">GlobalTransfer</span>.
+            Our platform makes{" "}
             <span className="text-blue-400 font-semibold">
               transactions simple, fast and secure
             </span>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, forwardRef } from "react";
 import { usePathname } from "next/navigation";
+import { ArrowRightLeft } from "lucide-react";
 import { MenuButtonProps, MenuDropDownProps } from "./types";
 import { SuiWallet } from "./components/SuiWallet";
 import { SolanaWallet } from "./components/SolanaWallet";
@@ -43,9 +44,10 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link
           href="/"
-          className="relative text-xl font-bold transition-all duration-200 hover:text-white hover:scale-105"
+          className="relative flex items-center gap-2 text-xl font-bold transition-all duration-200 hover:text-white hover:scale-105"
         >
-          Mini Transfer
+          <ArrowRightLeft className="w-6 h-6 transition-all duration-200 hover:rotate-180" />
+          <span className="hidden min-[270px]:inline">GlobalTransfer</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
