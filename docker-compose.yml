@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  app:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SOLANA_RPC_ENDPOINT=https://api.devnet.solana.com
+      - NEXT_PUBLIC_SUI_RPC_ENDPOINT=https://fullnode.testnet.sui.io:443
+      - NEXT_PUBLIC_REOWN_PROJECT_ID=demo-project-id
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
