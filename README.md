@@ -146,21 +146,21 @@ So for this project I did:
 
 - Fix/Update dependencies
 - Implement ConnectWallet buttons to ensure connecting wallets
-- createSolanaTransfer fix rpcUrl
-- implement all useSolanaTransactions and ensure return right data to render on table.
-- createSuiTransfer fix SUI mist, the SUI decimal was wrong, 1 SUI is 1.000.000.000 MIST not 1.000.000
-- implement all useSuiTransactions and ensure return right data to render on table.
+- Fix the rpcUrl prop on createSolanaTransfer
+- Implement all useSolanaTransactions and ensure return right data to render on table
+- Fix SUI mist on createSuiTransfer, the SUI decimal was wrong, 1 SUI is 1.000.000.000 MIST not 1.000.000
+- Implement all useSuiTransactions and ensure return right data to render on table
 
 **Make the things right**
 
 - Improve layout, make things responsive, like Transaction Card, Table and Header
 - Use forms to manage data input. To manage the forms I used react-hook-form + zod to validation
 - Use zod to validate data on the frontend as well as on the backend(server-actions)
-- Refactor frontend, move all the business logic to the backend using server actions. The frontend only signs the transactions when needed.
-- To create server actions I used zsa. With zsa we can make server action in a cool way ensuring strong typing through backend to frontend and another things.
+- Refactor frontend, move all the business logic to the backend using server actions. The frontend only signs the transactions when needed
+- To create server actions I used zsa. With zsa we can make server action in a cool way ensuring strong typing through backend to frontend and another things
 
 **Make the things faster (TODO)**
 
 - Engineering process to improve the backend and frontend
-- Apply some architecture, like clean architecture etc.
+- Apply some architecture, like clean architecture etc
 - Apply Service Locator pattern to ensure better performance on serverless infrastructure, because its allow dependencies cache through requests
