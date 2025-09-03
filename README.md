@@ -121,7 +121,7 @@ Running using npm:
 
 3 - pnpm run dev
 
-## The app will run at: http://localhost:3000
+## The app will running at: http://localhost:3000
 ```
 
 Running using docker:
@@ -131,7 +131,7 @@ Running using docker:
 
 2 - docker-compose up
 
-## The app will run at: http://localhost:3000
+## The app will running at: http://localhost:3000
 ```
 
 ---
