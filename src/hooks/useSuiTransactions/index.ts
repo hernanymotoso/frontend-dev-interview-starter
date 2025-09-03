@@ -14,6 +14,7 @@ export const useSuiTransactions = (address?: string) => {
     setError(null);
 
     try {
+      // TODO: move all to the backend
       const response = await fetch(process.env.NEXT_PUBLIC_SUI_RPC_ENDPOINT!, {
         method: "POST",
         headers: {
